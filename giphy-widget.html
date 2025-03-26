@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giphy Widget para Element</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; }
+        #search { width: 80%; padding: 8px; margin-bottom: 10px; }
+        .gif-container img { width: 100px; height: auto; cursor: pointer; margin: 5px; }
+    </style>
+</head>
+<body>
+    <h2>Busca un GIF</h2>
+    <input type="text" id="search" placeholder="Escribe aquí..." />
+    <button onclick="searchGifs()">Buscar</button>
+    <div class="gif-container" id="results"></div>
+
+    <script>
+        const apiKey = "zYVIJUiLGH8QKQ67Jv9rNBnhMTX7ohsG"; // Reemplaza con tu clave de Giphy
+
+        function searchGifs() {
+            const query = document.getElementById("search").value;
+            fetch(`https://api.giphy.com/v1/gifs/search?q=${query}&api_key=${apiKey}&limit=10`)
+                .then(response => response.json())
+                .then(data => {
+                    let resultsDiv = document.getElementById("results");
+                    resultsDiv.innerHTML = "";
+                    data.data.forEach(gif => {
+                        let img = document.createElement("img");
+                        img.src = gif.images.fixed_height.url;
+                        img.onclick = () => sendGifToElement(gif.images.fixed_height.url);
+                        resultsDiv.appendChild(img);
+                    });
+                });
+        }
+
+        function sendGifToElement(gifUrl) {
+            window.open(gifUrl, "_blank"); // Abre el GIF en una pestaña nueva
+        }
+    </script>
+</body>
+</html>
